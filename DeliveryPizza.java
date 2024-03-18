@@ -4,15 +4,11 @@ public class DeliveryPizza extends Pizza {
 //    creates deliveryfee
     private double deliveryFee;
 
-//    initializes DeliveryPizza with deliveryFee and deliveryAdress array
-    public DeliveryPizza(String[] toppings, int numToppings, double deliveryFee, String[] deliveryAddress) {
+    public DeliveryPizza(String[] toppings, int numToppings) {
         super(toppings, numToppings);
-        this.deliveryFee = deliveryFee;
-        String deliveryAdress = Arrays.toString(deliveryAddress);
-        calcDeliveryFee();
     }
 
-//    call getprice from superclass in pizza
+    //    call getprice from superclass in pizza
     public double getPrice() {
         return super.getPrice() + deliveryFee;
     }
@@ -28,6 +24,7 @@ public class DeliveryPizza extends Pizza {
 
 //    returns superclass while incorporating deliveryFee
     public String toString() {
+
         return super.toString() + "\nDelivery Fee: $" + deliveryFee;
     }
 }
