@@ -2,48 +2,45 @@ import java.io.*;
 import java.util.Scanner;
 
 public class QuestionTree {
-    private QuestionNode root;
+    private QuestionNode base;
     private Scanner sc;
 
 //    constructor for QuestionTree class, initializing tree and scanner
     public QuestionTree() {
-        root = null;
+        base = null;
         sc = new Scanner(System.in);
     }
 
 //    restartGame method that prompts user to enter a question and left and right node, if there is a previous question
 //    and there's a leaf node that has a yes but nothing for no, it can be populated by this method to further the game.
     public void restartGame() {
-        System.out.println("Please enter a question.");
-        root = new QuestionNode(new Question(sc.nextLine()));
+        System.out.println("Enter a question.");
+        base = new QuestionNode(new Question(sc.nextLine()));
 
         System.out.println("Enter something for that question that corresponds to yes.");
-        root.leftNode = new QuestionNode(new Question(sc.nextLine()));
+        base.leftNode = new QuestionNode(new Question(sc.nextLine()));
 
         System.out.println("Enter something for that question that corresponds to no.");
-        root.rightNode = new QuestionNode(new Question(sc.nextLine()));
+        base.rightNode = new QuestionNode(new Question(sc.nextLine()));
     }
 
 //    playGame method that handles the yes and no response, if there is null then it will prompt restartGame to populate
 //    the binary tree, if it is !null then it will begin the guessing process, and if it's correct then the game will end and
 //    show the main "screen", if it's incorrect, the game will prompt a way to better guess the question by creating a new node.
     public void playGame() {
-        if (root == null) {
+        if (base == null) {
             restartGame();
         }
-
-        QuestionNode current = root;
-
+        QuestionNode current = base;
         while (!current.isLeafNode()) {
             System.out.println(current.question.getQuestion());
             String response = sc.nextLine().trim().toLowerCase();
-
             if (response.equals("yes")) {
                 current = current.leftNode;
             } else if (response.equals("no")) {
                 current = current.rightNode;
             } else {
-                System.out.println("Invalid Command");
+                System.out.println("Invalid");
             }
         }
 
@@ -53,7 +50,6 @@ public class QuestionTree {
         if (response.equals("yes")) {
             System.out.println("Boom! I win!");
         }
-
         if (response.equals("no")) {
             System.out.println("Prompt a question that fits what you were thinking of");
             String newQuestion = sc.nextLine();
@@ -64,14 +60,15 @@ public class QuestionTree {
             current.leftNode = new QuestionNode(new Question(answer));
             current.rightNode = new QuestionNode(current.question);
         } else if (!response.equals("yes")) {
-            System.out.println("Invalid Command");
+            System.out.println("Invalid");
         }
     }
 
 //    saveToFile method that takes the finished game once "save" is typed, and prints it to "puterstore.txt" (type that exact text file or else it won,t save)
     public void saveToFile(String fileName) {
+//        file not found exception to check to working directory, as long as the txt file is saved in main folder, program should run no problem
         try (PrintWriter writer = new PrintWriter(fileName)) {
-            saveTree(root, writer);
+            saveTree(base, writer);
             System.out.println("Tree saved to " + fileName);
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found.");
@@ -99,7 +96,6 @@ public class QuestionTree {
         while (!donePlaying) {
             System.out.print("Please enter command (play, quit, restart, save): ");
             command = tree.sc.nextLine().toLowerCase();
-
             if (command.equals("play")) {
                 tree.playGame();
             } else if (command.equals("quit")) {
